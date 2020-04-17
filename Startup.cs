@@ -25,9 +25,15 @@ namespace Back_Entertainment
             services.AddCors();
             services.AddControllers();
             
+            
+            services.AddScoped<IWalletRepository>(factory => {
+                    return new WalletRepository(Configuration.GetConnectionString("MySqlDbConnection"));
+            });
+            
             services.AddScoped<IUserRepository>(factory => {
                     return new UserRepository(Configuration.GetConnectionString("MySqlDbConnection"));
             });
+
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
             {

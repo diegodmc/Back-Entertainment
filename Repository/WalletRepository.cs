@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Back_Entertainment.Models;
 using MySql.Data.MySqlClient;
 using Dapper;
+using System;
 
 namespace Back_Entertainment.Repository
 {
@@ -16,7 +17,7 @@ namespace Back_Entertainment.Repository
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                return connection.Query<Wallet>("SELECT  CodeWallet "+
+                return connection.Query<Wallet>("SELECT  CodeWallet ,"+
                                                         "StatusWallet ,"+
                                                         "Email ,"+
                                                         "FirstAction ,"+
@@ -33,7 +34,7 @@ namespace Back_Entertainment.Repository
                                                         "FourthPrcAction,"+
                                                         "FifthAction ,"+
                                                         "FifthPctAction ,"+
-                                                        "FifthPrtAction  FROM WALLET ");
+                                                        "FifthPrcAction  FROM WALLET ");
             }
         }
 
@@ -42,7 +43,7 @@ namespace Back_Entertainment.Repository
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
 
-                return  connection.Query<Wallet>("SELECT  CodeWallet "+
+                return  connection.Query<Wallet>("SELECT  CodeWallet, "+
                                                         "StatusWallet ,"+
                                                         "Email ,"+
                                                         "FirstAction ,"+
@@ -59,7 +60,7 @@ namespace Back_Entertainment.Repository
                                                         "FourthPrcAction,"+
                                                         "FifthAction ,"+
                                                         "FifthPctAction ,"+
-                                                        "FifthPrtAction  FROM WALLET ").AsList().Find(e => e.Email == email && e.StatusWallet == status && e.CodeWallet == codeWallet) ;
+                                                        "FifthPrcAction  FROM WALLET ").AsList().Find(e => e.Email == email && e.StatusWallet == status && e.CodeWallet == codeWallet) ;
             }
         }
 
@@ -67,45 +68,9 @@ namespace Back_Entertainment.Repository
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                string sql = "INSERT INTO WALLET (       CodeWallet "+
-                                                        "StatusWallet ,"+
-                                                        "Email ,"+
-                                                        "FirstAction ,"+
-                                                        "FirstPctAction ,"+
-                                                        "FirstPrcAction ,"+
-                                                        "SecondAction ,"+
-                                                        "SecondPctAction,"+
-                                                        "SecondPrcAction ,"+
-                                                        "ThirdAction ,"+
-                                                        "ThirdPctAction,"+
-                                                        "ThirdPrcAction,"+
-                                                        "FourthAction ,"+
-                                                        "FourthPctAction,"+
-                                                        "FourthPrcAction,"+
-                                                        "FifthAction ,"+
-                                                        "FifthPctAction ,"+
-                                                        "FifthPrtAction  )"+
-                                                        " ) VALUES( "+
-                                                        "@CodeWallet "+
-                                                        "@StatusWallet ,"+
-                                                        "@Email ,"+
-                                                        "@FirstAction ,"+
-                                                        "@FirstPctAction ,"+
-                                                        "@FirstPrcAction ,"+
-                                                        "@SecondAction ,"+
-                                                        "@SecondPctAction,"+
-                                                        "@SecondPrcAction ,"+
-                                                        "@ThirdAction ,"+
-                                                        "@ThirdPctAction,"+
-                                                        "@ThirdPrcAction,"+
-                                                        "@FourthAction ,"+
-                                                        "@FourthPctAction,"+
-                                                        "@FourthPrcAction,"+
-                                                        "@FifthAction ,"+
-                                                        "@FifthPctAction ,"+
-                                                        "@FifthPrtAction  );";
-
-                connection.Execute(sql, new {       CodeWallet      = wallet.CodeWallet     ,  
+                connection.Execute(@"INSERT INTO WALLET ( CodeWallet ,StatusWallet ,Email ,FirstAction ,FirstPctAction ,FirstPrcAction ,SecondAction ,SecondPctAction,SecondPrcAction ,ThirdAction ,ThirdPctAction,ThirdPrcAction,FourthAction ,FourthPctAction,FourthPrcAction,FifthAction ,FifthPctAction ,FifthPrcAction ) VALUES( @CodeWallet, @StatusWallet ,@Email ,@FirstAction ,@FirstPctAction ,@FirstPrcAction ,@SecondAction ,@SecondPctAction,@SecondPrcAction ,@ThirdAction ,@ThirdPctAction,@ThirdPrcAction,@FourthAction ,@FourthPctAction,@FourthPrcAction,@FifthAction ,@FifthPctAction ,@FifthPrcAction  );",
+            
+                                          new {       CodeWallet    = wallet.CodeWallet    ,  
                                                     StatusWallet    = wallet.StatusWallet   ,  
                                                     Email           = wallet.Email          ,  
                                                     FirstAction     = wallet.FirstAction    ,  
@@ -122,7 +87,7 @@ namespace Back_Entertainment.Repository
                                                     FourthPrcAction = wallet.FourthPrcAction,  
                                                     FifthAction     = wallet.FifthAction    ,  
                                                     FifthPctAction  = wallet.FifthPctAction ,  
-                                                    FifthPrtAction  = wallet.FifthPrtAction 
+                                                    FifthPrcAction  = wallet.FifthPrcAction 
                                               });
                 
             }
@@ -146,7 +111,7 @@ namespace Back_Entertainment.Repository
                                                         "FourthPrcAction =@FourthPrcAction,"+
                                                         "FifthAction=@FifthAction ,"+
                                                         "FifthPctAction=@FifthPctAction ,"+
-                                                        "FifthPrtAction =@FifthPrtAction  "+
+                                                        "FifthPrcAction =@FifthPrcAction  "+
                                                 " WHERE Email =  @Email "+
                                                 "   AND StatusWallet = @StatusWallet "+
                                                 "   AND CodeWallet = @CodeWallet ;";
@@ -169,7 +134,7 @@ namespace Back_Entertainment.Repository
                                                     FourthPrcAction = wallet.FourthPrcAction,  
                                                     FifthAction     = wallet.FifthAction    ,  
                                                     FifthPctAction  = wallet.FifthPctAction ,  
-                                                    FifthPrtAction  = wallet.FifthPrtAction 
+                                                    FifthPrcAction  = wallet.FifthPrcAction 
                                               });
                 
             }

@@ -20,6 +20,6 @@ namespace Back_Entertainment.Models
         public string FourthPrcAction { get; set; }
         public string FifthAction { get; set; }
         public string FifthPctAction { get; set; }
-        public string FifthPrtAction { get; set; }
+        public string FifthPrcAction { get; set; }
     }
 }

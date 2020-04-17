@@ -19,7 +19,7 @@ namespace Back_Entertainment.Services
                 {
                     new Claim(ClaimTypes.Name, user.Email.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(20),
+                Expires = DateTime.UtcNow.AddMinutes(60),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

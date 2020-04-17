@@ -29,13 +29,9 @@ namespace Back_Entertainment.Controllers
                 
             model.Password = "";
 
-            var token = TokenService.GenerateToken(user);
+            return TokenService.GenerateToken(user);
             
-            return new
-            {
-                user = user,
-                token = token
-            };
+            
         }
 
 
@@ -52,13 +48,8 @@ namespace Back_Entertainment.Controllers
 
              _userRepository.CreateUser(model);
 
-            var token = TokenService.GenerateToken(model);
+            return  TokenService.GenerateToken(model);
             
-            return new
-            {
-                user = model.Email,
-                token = token
-            };
         }
 
 

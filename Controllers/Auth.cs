@@ -20,25 +20,21 @@ namespace Back_Entertainment.Controllers
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<dynamic>> Authenticate([FromBody]User model)
+        public async Task<ActionResult<dynamic>> Login([FromBody]User model)
         {
-            var user = _userRepository.GetUser(model.Username);
+            var user = _userRepository.GetUser(model.Email);
+
+            if(user == null)
+              return NotFound();
 
             if(!Hash.VerifyPassword(model.Password, user.PasswordHash,user.PasswordSalt))
-                return null;
+                return Unauthorized();
                 
             model.Password = "";
 
-            if (user == null)
-                return NotFound(new { message = "Usuário ou senha inválidos" });
-
-            var token = TokenService.GenerateToken(user);
+            return TokenService.GenerateToken(user);
             
-            return new
-            {
-                user = user,
-                token = token
-            };
+            
         }
 
 
@@ -47,6 +43,11 @@ namespace Back_Entertainment.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<dynamic>> Register([FromBody]User model)
         {
+
+            var user = _userRepository.GetUser(model.Email);
+            if(user != null)
+                return new ConflictResult();
+                
             byte[] passwordHash, passwordSalt;
             Hash.CreatePasswordHash(model.Password, out passwordHash, out passwordSalt);
             model.Password = "";
@@ -55,13 +56,8 @@ namespace Back_Entertainment.Controllers
 
              _userRepository.CreateUser(model);
 
-            var token = TokenService.GenerateToken(model);
+            return  TokenService.GenerateToken(model);
             
-            return new
-            {
-                user = model.Username,
-                token = token
-            };
         }
 
 
@@ -74,16 +70,6 @@ namespace Back_Entertainment.Controllers
         [Route("authenticated")]
         [Authorize]
         public string Authenticated() => String.Format("Autenticado - {0}", User.Identity.Name);
-
-        [HttpGet]
-        [Route("employee")]
-        [Authorize(Roles = "employee,manager")]
-        public string Employee() => "Funcionário";
-
-        [HttpGet]
-        [Route("manager")]
-        [Authorize(Roles = "manager")]
-        public string Manager() => "Gerente";
 
     }
 }

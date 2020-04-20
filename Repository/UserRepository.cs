@@ -16,7 +16,7 @@ namespace Back_Entertainment.Repository
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                return connection.Query<User>("SELECT UserName,Role,PasswordHash,PasswordSalt FROM USER");
+                return connection.Query<User>("SELECT Email,PasswordHash,PasswordSalt FROM USER");
             }
         }
 
@@ -24,7 +24,7 @@ namespace Back_Entertainment.Repository
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                return  connection.Query<User>("SELECT UserName,Role,PasswordHash,PasswordSalt FROM USER ").AsList().Find(e => e.Username == email);
+                return  connection.Query<User>("SELECT Email,PasswordHash,PasswordSalt FROM USER ").AsList().Find(e => e.Email == email);
             }
         }
 
@@ -32,8 +32,8 @@ namespace Back_Entertainment.Repository
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                string sql = "INSERT INTO USER (UserName,Role,PasswordHash,PasswordSalt) VALUES(@UserName,@Role,@PasswordHash,@PasswordSalt)";
-                connection.Execute(sql, new {UserName = user.Username,Role = user.Role,PasswordHash = user.PasswordHash,PasswordSalt =user.PasswordSalt});
+                string sql = "INSERT INTO USER (Email,PasswordHash,PasswordSalt) VALUES(@Email,@PasswordHash,@PasswordSalt)";
+                connection.Execute(sql, new {Email = user.Email,PasswordHash = user.PasswordHash,PasswordSalt =user.PasswordSalt});
                 
             }
         }

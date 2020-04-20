@@ -24,8 +24,11 @@ namespace Back_Entertainment.Controllers
         {
             var user = _userRepository.GetUser(model.Email);
 
+            if(user == null)
+              return NotFound();
+
             if(!Hash.VerifyPassword(model.Password, user.PasswordHash,user.PasswordSalt))
-                return BadRequest("Dados inválidos");
+                return Unauthorized();
                 
             model.Password = "";
 
@@ -40,6 +43,11 @@ namespace Back_Entertainment.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<dynamic>> Register([FromBody]User model)
         {
+
+            var user = _userRepository.GetUser(model.Email);
+            if(user != null)
+                return new ConflictResult();
+                
             byte[] passwordHash, passwordSalt;
             Hash.CreatePasswordHash(model.Password, out passwordHash, out passwordSalt);
             model.Password = "";

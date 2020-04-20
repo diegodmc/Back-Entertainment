@@ -97,7 +97,7 @@ namespace Back_Entertainment.Repository
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                string sql = "UPDATE WALLET          SET FirstAction =@FirstAction,"+
+                string sql = @"UPDATE WALLET          SET FirstAction =@FirstAction,"+
                                                         "FirstPctAction =@FirstPctAction ,"+
                                                         "FirstPrcAction =@FirstPrcAction,"+
                                                         "SecondAction =@SecondAction ,"+

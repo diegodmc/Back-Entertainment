@@ -31,10 +31,30 @@ namespace Back_Entertainment.Controllers
 
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
             model.Email = User.Identity.Name;
-            _walletRepository.CreateWallet(model);
+
+            var wallet = GetWallet(User.Identity.Name, "1");
+            if(wallet == null)
+                _walletRepository.CreateWallet(model);
+            else
+               _walletRepository.UpdateWallet(model);
             return model;
         }
+        [HttpGet]
+        [Route("GetWallet")]
+        [Authorize]
+        public async Task<ActionResult<Wallet>> GetWallet()
+        {   
+            if(User.Identity.Name == null) return BadRequest("Usuário inválido");
+            return _walletRepository.GetWallet(User.Identity.Name, "1", 1);
+        }
 
+        public async Task<ActionResult<Wallet>> GetWallet(string email, string status)
+        {   
+            if(User.Identity.Name == null) return BadRequest("Usuário inválido");
+            
+            return _walletRepository.GetWallet(User.Identity.Name, status, 1);
+            
+        }
 
     }
 }

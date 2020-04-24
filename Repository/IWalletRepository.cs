@@ -5,8 +5,8 @@ namespace Back_Entertainment.Repository
 {
     public interface IWalletRepository
     {
-        IEnumerable<Wallet> GetAllWallets();
-        Wallet GetWallet(string email, string status, int codeWallet);
+        List<Wallet> GetAllWallets(string codeWallet, string statusWallet);
+        List<Wallet> GetWallet(string email);
         void CreateWallet(Wallet wallet);
         void UpdateWallet(Wallet wallet);
         void DeleteWallet(Wallet wallet);

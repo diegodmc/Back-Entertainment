@@ -60,16 +60,20 @@ namespace Back_Entertainment.Controllers
         {   
             if(User.Identity.Name == null)  return BadRequest("Usuário inválido");
             var balance = _balanceRepository.GetAllBalances(User.Identity.Name);
-            int over = 0;
+            int inputValue = 0;
+            int outValue = 0;
             foreach(var item in balance)
             {
-              over = Convert.ToInt32(item.ValueInput)- Convert.ToInt32(item.ValueOut);
+              if(Convert.ToInt32(item.ValueInput) != 0)
+                inputValue = inputValue  + Convert.ToInt32(item.ValueInput);
+              if(Convert.ToInt32(item.ValueOut) != 0)
+                outValue = outValue + Convert.ToInt32(item.ValueOut);
             }
             
-             if(over >= 15)
-                return Ok(new {accountBalance = String.Format(" {0, 0:C2}", over), cust="R$ 15,00", updatedBalance = String.Format("{0, 0:C2}",(over-15)) });
+             if((inputValue - outValue) >= 15)
+                return Ok(new {accountBalance = String.Format(" {0, 0:C2}", inputValue - outValue), cust="R$ 15,00", updatedBalance = String.Format("{0, 0:C2}",inputValue - outValue-15) });
              else
-                return BadRequest();
+                return NoContent();
             
         }  
     }

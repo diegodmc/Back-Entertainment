@@ -13,57 +13,64 @@ namespace Back_Entertainment.Repository
         {
             _connectionString = connectionString;   // Injetando a string de conexão no construtor da classe
         }
-        public IEnumerable<Wallet> GetAllWallets()
+        public List<Wallet> GetAllWallets(string codeWallet, string statusWallet)
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                return connection.Query<Wallet>("SELECT  CodeWallet ,"+
-                                                        "StatusWallet ,"+
-                                                        "Email ,"+
-                                                        "FirstAction ,"+
-                                                        "FirstPctAction ,"+
-                                                        "FirstPrcAction ,"+
-                                                        "SecondAction ,"+
-                                                        "SecondPctAction,"+
-                                                        "SecondPrcAction ,"+
-                                                        "ThirdAction ,"+
-                                                        "ThirdPctAction,"+
-                                                        "ThirdPrcAction,"+
-                                                        "FourthAction ,"+
-                                                        "FourthPctAction,"+
-                                                        "FourthPrcAction,"+
-                                                        "FifthAction ,"+
-                                                        "FifthPctAction ,"+
-                                                        "FifthPrcAction  FROM WALLET ");
+                string sql = @" SELECT  CodeWallet ,"+
+                                        "StatusWallet ,"+
+                                        "Email ,"+
+                                        "FirstAction ,"+
+                                        "FirstPctAction ,"+
+                                        "FirstPrcAction ,"+
+                                        "SecondAction ,"+
+                                        "SecondPctAction,"+
+                                        "SecondPrcAction ,"+
+                                        "ThirdAction ,"+
+                                        "ThirdPctAction,"+
+                                        "ThirdPrcAction,"+
+                                        "FourthAction ,"+
+                                        "FourthPctAction,"+
+                                        "FourthPrcAction,"+
+                                        "FifthAction ,"+
+                                        "FifthPctAction ,"+
+                                        "FifthPrcAction  "+
+                                  " FROM WALLET "+
+                                  " WHERE CodeWallet = @CodeWallet " +
+                                  "   AND StatusWallet = @StatusWallet ";
+                var result = connection.Query<Wallet>(sql, new { codeWallet,statusWallet });
+                return result.AsList();
             }
         }
 
-        public Wallet GetWallet(string email, string status, int codeWallet)
+        public List<Wallet> GetWallet(string email)
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-
-                return  connection.Query<Wallet>("SELECT  CodeWallet, "+
-                                                        "StatusWallet ,"+
-                                                        "Email ,"+
-                                                        "FirstAction ,"+
-                                                        "FirstPctAction ,"+
-                                                        "FirstPrcAction ,"+
-                                                        "SecondAction ,"+
-                                                        "SecondPctAction,"+
-                                                        "SecondPrcAction ,"+
-                                                        "ThirdAction ,"+
-                                                        "ThirdPctAction,"+
-                                                        "ThirdPrcAction,"+
-                                                        "FourthAction ,"+
-                                                        "FourthPctAction,"+
-                                                        "FourthPrcAction,"+
-                                                        "FifthAction ,"+
-                                                        "FifthPctAction ,"+
-                                                        "FifthPrcAction  FROM WALLET ").AsList().Find(e => e.Email == email && e.StatusWallet == status && e.CodeWallet == codeWallet) ;
-            }
+                string sql = @"SELECT  CodeWallet, "+
+                                     "StatusWallet ,"+
+                                     "Email ,"+
+                                     "FirstAction ,"+
+                                     "FirstPctAction ,"+
+                                     "FirstPrcAction ,"+
+                                     "SecondAction ,"+
+                                     "SecondPctAction,"+
+                                     "SecondPrcAction ,"+
+                                     "ThirdAction ,"+
+                                     "ThirdPctAction,"+
+                                     "ThirdPrcAction,"+
+                                     "FourthAction ,"+
+                                     "FourthPctAction,"+
+                                     "FourthPrcAction,"+
+                                     "FifthAction ,"+
+                                     "FifthPctAction ,"+
+                                     "FifthPrcAction  "+
+                               " FROM WALLET "+
+                              " WHERE Email = @Email ";
+                var result = connection.Query<Wallet>(sql, new { email });
+                return result.AsList();
+         }
         }
-
          public void CreateWallet(Wallet wallet)
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))

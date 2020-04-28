@@ -37,6 +37,11 @@ namespace Back_Entertainment
             services.AddScoped<IBalanceRepository>(factory => {
                     return new BalanceRepository(Configuration.GetConnectionString("MySqlDbConnection"));
             });
+
+            services.AddScoped<IPersonalDataRepository>(factory => {
+                    return new PersonalDataRepository(Configuration.GetConnectionString("MySqlDbConnection"));
+            });
+
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
             {

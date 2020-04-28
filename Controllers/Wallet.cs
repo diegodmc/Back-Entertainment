@@ -60,6 +60,7 @@ namespace Back_Entertainment.Controllers
             } 
             return model;
         }
+
         [HttpGet]
         [Route("GetWallet")]
         [Authorize]
@@ -147,7 +148,71 @@ namespace Back_Entertainment.Controllers
          {
             return _walletRepository.GetWallet(User.Identity.Name);
          }
-    }
+
+          [HttpGet]
+        [Route("GetOpen")]
+        [Authorize]
+        public async Task<ActionResult<List<WalletJson>>> GetOpen()
+        {   
+            if(User.Identity.Name == null) return BadRequest("Usuário inválido");
+            var result = new List<WalletJson>();
+            var wallets = _walletRepository.GetAllWallets("1","1");
+            foreach(var wallet in wallets)
+            {
+                var obj = new WalletJson();
+                obj.id = wallet.Id;
+                obj.email = wallet.Email;
+                obj.wallets = wallet.FirstAction+"-"+wallet.SecondAction+"-"+wallet.ThirdAction+"-"+wallet.FourthAction+"-"+wallet.FifthAction;
+                obj.balance =0;
+                result.Add(obj);
+            }
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("GetClosed")]
+        [Authorize]
+        public async Task<ActionResult<List<WalletJson>>> GetClosed()
+        {   
+            if(User.Identity.Name == null) return BadRequest("Usuário inválido");
+            var result = new List<WalletJson>();
+            var wallets = _walletRepository.GetAllWallets("1","2");
+            foreach(var wallet in wallets)
+            {
+                var obj = new WalletJson();
+                obj.id = wallet.Id;
+                obj.email = wallet.Email;
+                obj.wallets = wallet.FirstAction+"-"+wallet.SecondAction+"-"+wallet.ThirdAction+"-"+wallet.FourthAction+"-"+wallet.FifthAction;
+                obj.balance = 0;
+                result.Add(obj);
+            }
+            return result;
+        }
+
+        
+        [HttpGet]
+        [Route("GetRanking")]
+        [Authorize]
+        public async Task<ActionResult<List<WalletJson>>> GetRanking()
+        {   
+            if(User.Identity.Name == null) return BadRequest("Usuário inválido");
+            var result = new List<WalletJson>();
+            var wallets = _walletRepository.GetAllWallets("1","3");
+            foreach(var wallet in wallets)
+            {
+                var obj = new WalletJson();
+                obj.id = wallet.Id;
+                obj.email = wallet.Email;
+                obj.wallets = wallet.FirstAction+"-"+wallet.SecondAction+"-"+wallet.ThirdAction+"-"+wallet.FourthAction+"-"+wallet.FifthAction;
+                obj.balance = 0;
+                result.Add(obj);
+            }
+
+            return result;
+        }
+    }       
+    
     public enum Status
     {
             //0 monto a carteira
@@ -155,5 +220,13 @@ namespace Back_Entertainment.Controllers
             walletPayNotStarted =1,
             walletPayStarted=2,
             history=3
+    }
+    public class WalletJson
+    {
+        public int id {get; set;}
+        public string email {get; set;}
+        public string wallets {get; set;}
+    
+        public decimal balance {get; set;}
     }
 }

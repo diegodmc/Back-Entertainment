@@ -71,7 +71,7 @@ namespace Back_Entertainment.Controllers
             }
             
              if((inputValue - outValue) >= 15)
-                return Ok(new {accountBalance = String.Format(" {0, 0:C2}", inputValue - outValue), cust="R$ 15,00", updatedBalance = String.Format("{0, 0:C2}",inputValue - outValue-15) });
+                return Ok(new {val = (inputValue - outValue), accountBalance = String.Format(" {0, 0:C2}", inputValue - outValue), cust="R$ 15,00", updatedBalance = String.Format("{0, 0:C2}",inputValue - outValue-15) });
              else
                 return NoContent();
             

@@ -21,23 +21,25 @@ namespace Back_Entertainment.Repository
                                         "StatusWallet ,"+
                                         "Email ,"+
                                         "FirstAction ,"+
-                                        "FirstPctAction ,"+
                                         "FirstPrcAction ,"+
+                                        "FirstPctAction ,"+
                                         "SecondAction ,"+
-                                        "SecondPctAction,"+
                                         "SecondPrcAction ,"+
+                                        "SecondPctAction ,"+
                                         "ThirdAction ,"+
-                                        "ThirdPctAction,"+
                                         "ThirdPrcAction,"+
+                                        "ThirdPctAction,"+
                                         "FourthAction ,"+
-                                        "FourthPctAction,"+
                                         "FourthPrcAction,"+
+                                        "FourthPctAction,"+
                                         "FifthAction ,"+
+                                        "FifthPrcAction ,"+
                                         "FifthPctAction ,"+
-                                        "FifthPrcAction  "+
+                                        "FifthPctAction +FourthPctAction +ThirdPctAction +SecondPctAction + FirstPctAction as balance"+
                                   " FROM WALLET "+
                                   " WHERE CodeWallet = @CodeWallet " +
-                                  "   AND StatusWallet = @StatusWallet ";
+                                  "   AND StatusWallet = @StatusWallet "+
+                                  " ORDER BY 19 DESC";
                 var result = connection.Query<Wallet>(sql, new { codeWallet,statusWallet });
                 return result.AsList();
             }
@@ -146,24 +148,13 @@ namespace Back_Entertainment.Repository
                 
             }
         }
+        
+
+         
 
 
-         public void DeleteWallet(Wallet wallet)
-        {
-            using(MySqlConnection connection = new MySqlConnection(_connectionString))
-            {
-                string sql = "DELETE FROM WALLET  WHERE Email =  @Email "+
-                                                "   AND StatusWallet = @StatusWallet "+
-                                                "   AND CodeWallet = @CodeWallet ;";
-                                               
 
-                connection.Execute(sql, new {       CodeWallet      = wallet.CodeWallet     ,  
-                                                    StatusWallet    = wallet.StatusWallet   ,  
-                                                    Email           = wallet.Email         
-                                              });
-                
-            }
-        }
+
     }
 
 }

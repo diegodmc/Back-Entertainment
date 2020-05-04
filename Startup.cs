@@ -42,6 +42,27 @@ namespace Back_Entertainment
                     return new PersonalDataRepository(Configuration.GetConnectionString("MySqlDbConnection"));
             });
 
+            services.AddScoped<IPeopleRepository>(factory => {
+                    return new PeopleRepository(Configuration.GetConnectionString("MySqlDbConnection"));
+            });
+
+            services.AddScoped<IScoreRepository>(factory => {
+                    return new ScoreRepository(Configuration.GetConnectionString("MySqlDbConnection"));
+            });
+
+            services.AddScoped<IActionB3Repository>(factory => {
+                    return new ActionB3Repository(Configuration.GetConnectionString("MySqlDbConnection"));
+            });
+
+            
+            services.AddScoped<IPriceActionRepository>(factory => {
+                    return new PriceActionRepository(Configuration.GetConnectionString("MySqlDbConnection"));
+            });
+
+            
+            services.AddScoped<IWalletCurrentRepository>(factory => {
+                    return new WalletCurrentRepository(Configuration.GetConnectionString("MySqlDbConnection"));
+            });
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
             {

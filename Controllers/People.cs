@@ -8,13 +8,13 @@ using System;
 
 namespace Back_Entertainment.Controllers
 {
-    [Route("v1/personaldata")]
-    public class PersonalDataController : ControllerBase
+    [Route("v1/people")]
+    public class PeopleController : ControllerBase
     {
-        private readonly IPersonalDataRepository _personalDataRepository;
-        public PersonalDataController(IPersonalDataRepository personalDataRepository)
+        private readonly IPeopleRepository _peopleRepository;
+        public PeopleController(IPeopleRepository peopleRepository)
         {
-            _personalDataRepository = personalDataRepository;
+            _peopleRepository = peopleRepository;
         }
 
         
@@ -27,34 +27,36 @@ namespace Back_Entertainment.Controllers
         [HttpPost]
         [Route("create")]
         [Authorize]
-        public async Task<ActionResult<PersonalData>> Create([FromBody] PersonalData model)
+        public async Task<ActionResult<People>> Create([FromBody] People model)
         {   
             if (model == null) return BadRequest(model);
 
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
             model.Email = User.Identity.Name;
             
-            var personal = GetPersonalData();
+            var people = GetPeople();
 
-            if(personal.Result == null)
-                _personalDataRepository.CreatePersonalData(model);
+            if(people.Result == null)
+                _peopleRepository.CreatePeople(model);
             else 
-                _personalDataRepository.UpdatePersonalData(model);
+                _peopleRepository.UpdatePeople(model);
             
             return model;
         }
         [HttpGet]
-        [Route("GetPersonalData")]
+        [Route("GetPeople")]
         [Authorize]
-        public async Task<ActionResult<PersonalData>> GetPersonalData()
+        public async Task<ActionResult<People>> GetPeople()
         {   
             if(User.Identity.Name == null)  return BadRequest("Usuário inválido");
             
-            var result = _personalDataRepository.GetPersonalData(User.Identity.Name);
+            var result =  _peopleRepository.GetPeople(User.Identity.Name);
             if(result == null)
                 return null;
             else 
                 return result;
+            
+
         }
         
     }

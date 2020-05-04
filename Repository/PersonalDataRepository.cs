@@ -17,11 +17,12 @@ namespace Back_Entertainment.Repository
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                string sql = "SELECT id, email,  name,  doc,  bank,  agency,  account,  digit,  accountBalance,  value FROM PersonalData WHERE Email = @Email order by id desc";
+                string sql = "SELECT id, email,    bank,  agency,  account,  digit,  accountBalance,  value FROM PersonalData WHERE Email = @Email order by id desc";
                 var result =  connection.Query<PersonalData>(sql, new {Email = email});
-                var a = result.AsList()[0];
-                
-                return result.AsList()[0];
+                if(result.AsList().Count == 0)
+                  return null;
+                else
+                  return result.AsList()[0];
             }
         }
 
@@ -29,8 +30,14 @@ namespace Back_Entertainment.Repository
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                string sql = "INSERT INTO PersonalData (email,  name,  doc,  bank,  agency,  account,  digit,  accountBalance,  value) VALUES(@email,  @name,  @doc,  @bank,  @agency,  @account,  @digit,  @accountBalance,  @value)";
-                connection.Execute(sql, new {Email = personal.Email,Name = personal.Name,Doc =personal.Doc, Bank = personal.Bank, Agency = personal.Agency, Account = personal.Account, Digit = personal.Digit , AccountBalance = personal.AccountBalance, Value = personal.Value});
+                string sql = "INSERT INTO PersonalData (email,   bank,  agency,  account,  digit,  accountBalance,  value) VALUES(@email,    @bank,  @agency,  @account,  @digit,  @accountBalance,  @value)";
+                connection.Execute(sql, new {Email = personal.Email, 
+                                              Bank = personal.Bank, 
+                                            Agency = personal.Agency, 
+                                           Account = personal.Account, 
+                                             Digit = "99", 
+                                    AccountBalance = personal.AccountBalance, 
+                                             Value = personal.Value});
                 
             }
         }
@@ -43,8 +50,6 @@ namespace Back_Entertainment.Repository
                 personal.Id = GetPersonalData(personal.Email).Id;
                 personal.Digit = "0";
                 string sql = @"UPDATE PersonalData  SET Email =@Email,"+
-                                                        "Name =@Name ,"+
-                                                        "Doc =@Doc,"+
                                                         "Bank =@Bank ,"+
                                                         "Agency =@Agency,"+
                                                         "Account =@Account ,"+
@@ -57,8 +62,6 @@ namespace Back_Entertainment.Repository
 
                 connection.Execute(sql, new {       Id = personal.Id,
                                                     Email = personal.Email,  
-                                                    Name = personal.Name,  
-                                                    Doc = personal.Doc,  
                                                     Bank = personal.Bank,  
                                                     Agency = personal.Agency,  
                                                     Account = personal.Account,  

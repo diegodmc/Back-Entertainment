@@ -9,6 +9,6 @@ namespace Back_Entertainment.Repository
         List<Wallet> GetWallet(string email);
         void CreateWallet(Wallet wallet);
         void UpdateWallet(Wallet wallet);
-        void DeleteWallet(Wallet wallet);
+        
     }
 }

@@ -34,3 +34,5 @@ C:\Projeto\B3\Back-Entertainment\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.
 C:\Projeto\B3\Back-Entertainment\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Projeto\B3\Back-Entertainment\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Projeto\B3\Back-Entertainment\obj\Debug\netcoreapp3.1\Back-Entertainment.MvcApplicationPartsAssemblyInfo.cs
+C:\Projeto\B3\Back-Entertainment\bin\Debug\netcoreapp3.1\RestClient.Net.dll
+C:\Projeto\B3\Back-Entertainment\bin\Debug\netcoreapp3.1\RestClient.Net.Abstractions.dll

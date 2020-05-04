@@ -4,16 +4,20 @@ using Back_Entertainment.Models;
 using Microsoft.AspNetCore.Authorization;
 using Back_Entertainment.Repository;
 using System.Collections.Generic;
-
+using System;
 namespace Back_Entertainment.Controllers
 {
     [Route("v1/wallet")]
     public class WalletController : ControllerBase
     {
         private readonly IWalletRepository _walletRepository;
-        public WalletController(IWalletRepository walletRepository)
+        private readonly IPeopleRepository _peopleRepository;
+        private readonly IWalletCurrentRepository _walletCurrentRepository;
+        public WalletController(IWalletRepository walletRepository,IPeopleRepository peopleRepository,IWalletCurrentRepository walletCurrentRepository)
         {
             _walletRepository = walletRepository;
+            _peopleRepository = peopleRepository;
+            _walletCurrentRepository =walletCurrentRepository;
         }
 
         
@@ -55,6 +59,7 @@ namespace Back_Entertainment.Controllers
             
             if(!canToEdit && !cantToEdit)
             {
+
                 _walletRepository.CreateWallet(model);
                 
             } 
@@ -81,6 +86,20 @@ namespace Back_Entertainment.Controllers
             return null;
         }
 
+        
+        [HttpGet]
+        [Route("GetWalletClient")]
+        [Authorize]
+        public async Task<ActionResult<WalletCurrent>> GetWalletClient(string email)
+        {   
+            if(User.Identity.Name == null) return BadRequest("Usuário inválido");
+            
+            var result = _walletCurrentRepository.GetWalletCurrent(User.Identity.Name, "1");
+
+            return result[0];
+            
+        }
+
       
 
         [HttpGet]
@@ -103,7 +122,8 @@ namespace Back_Entertainment.Controllers
                      return new 
                                 {
                                    subheader ="Inicio segunda-feira às 09:00 ",
-                                    header = "Monte sua carteira!"
+                                    header = "Monte sua carteira!",
+                                    choose = "Yes"
                                 };
                 }
                 foreach(var item in wallet)
@@ -115,7 +135,8 @@ namespace Back_Entertainment.Controllers
                                 return new
                                 {
                                     subheader = "Aguardando confirmação do pagamento",
-                                    header = "Participação à confirmar"
+                                    header = "Participação à confirmar",
+                                    choose = "Yes"
                                 };
                         }
                         else if(item.StatusWallet.Equals("1")) 
@@ -123,15 +144,30 @@ namespace Back_Entertainment.Controllers
                             return new
                                 {
                                     subheader = "Alteração da carteira até segunda às 09:00",
-                                    header = "Participação confirmada!"
+                                    header = "Participação confirmada!",
+                                    choose = "Yes"
                                 };
                         }
                         else if(item.StatusWallet.Equals("2"))
                         {
+                            
+                            var balance = _walletCurrentRepository.GetWalletCurrent(item.Email,item.CodeWallet.ToString())[0].Balance;
+                            var wallets = _walletRepository.GetAllWallets("1","2");
+                            int position =0;
+                            foreach(var wlt in wallets)
+                            {
+                                position = position +1;
+                                if(wlt.Email.Equals(User.Identity.Name))
+                                   break;
+                                
+                            }
+
                             return new
                                 {
+                                    
                                     subheader = "Encerramento sexta às 18:00",
-                                    header = "Posição 10º Rendimento 2,45%"
+                                    header = position +"º ranking semanal     " + balance+"% Rendimento",
+                                    choose = "Not"
                                 };
                         }
                         
@@ -157,13 +193,15 @@ namespace Back_Entertainment.Controllers
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
             var result = new List<WalletJson>();
             var wallets = _walletRepository.GetAllWallets("1","1");
+
             foreach(var wallet in wallets)
             {
+                var name = _peopleRepository.GetPeople(wallet.Email).Name;
                 var obj = new WalletJson();
                 obj.id = wallet.Id;
-                obj.email = wallet.Email;
+                obj.email = name == null ? wallet.Email : name;
                 obj.wallets = wallet.FirstAction+"-"+wallet.SecondAction+"-"+wallet.ThirdAction+"-"+wallet.FourthAction+"-"+wallet.FifthAction;
-                obj.balance =0;
+                obj.balance = wallet.Balance;
                 result.Add(obj);
             }
             return result;
@@ -178,13 +216,15 @@ namespace Back_Entertainment.Controllers
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
             var result = new List<WalletJson>();
             var wallets = _walletRepository.GetAllWallets("1","2");
+            
             foreach(var wallet in wallets)
             {
+                var name1 = _peopleRepository.GetPeople(wallet.Email).Name;
                 var obj = new WalletJson();
                 obj.id = wallet.Id;
-                obj.email = wallet.Email;
+                obj.email = name1 == null ? wallet.Email : name1;
                 obj.wallets = wallet.FirstAction+"-"+wallet.SecondAction+"-"+wallet.ThirdAction+"-"+wallet.FourthAction+"-"+wallet.FifthAction;
-                obj.balance = 0;
+                obj.balance = _walletCurrentRepository.GetWalletCurrent(wallet.Email,wallet.CodeWallet.ToString())[0].Balance;
                 result.Add(obj);
             }
             return result;
@@ -199,13 +239,38 @@ namespace Back_Entertainment.Controllers
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
             var result = new List<WalletJson>();
             var wallets = _walletRepository.GetAllWallets("1","3");
+            
             foreach(var wallet in wallets)
             {
+                var name = _peopleRepository.GetPeople(wallet.Email).Name;
                 var obj = new WalletJson();
                 obj.id = wallet.Id;
-                obj.email = wallet.Email;
+                obj.email = name == null ? wallet.Email : name;
                 obj.wallets = wallet.FirstAction+"-"+wallet.SecondAction+"-"+wallet.ThirdAction+"-"+wallet.FourthAction+"-"+wallet.FifthAction;
-                obj.balance = 0;
+                obj.balance = "0";
+                result.Add(obj);
+            }
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetDetailsWallet")]
+        [Authorize]
+        public async Task<ActionResult<List<WalletJson>>> GetDetailsWallet()
+        {   
+            if(User.Identity.Name == null) return BadRequest("Usuário inválido");
+            var result = new List<WalletJson>();
+            var wallets = _walletRepository.GetAllWallets("1","3");
+            
+            foreach(var wallet in wallets)
+            {
+                var name = _peopleRepository.GetPeople(wallet.Email).Name;
+                var obj = new WalletJson();
+                obj.id = wallet.Id;
+                obj.email = name == null ? wallet.Email : name;
+                obj.wallets = wallet.FirstAction+"-"+wallet.SecondAction+"-"+wallet.ThirdAction+"-"+wallet.FourthAction+"-"+wallet.FifthAction;
+                obj.balance = "0";
                 result.Add(obj);
             }
 
@@ -227,6 +292,6 @@ namespace Back_Entertainment.Controllers
         public string email {get; set;}
         public string wallets {get; set;}
     
-        public decimal balance {get; set;}
+        public string balance {get; set;}
     }
 }

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "jXaOxVIMBG7ZmTP6NsfaeR0cKqJEhE8clZkhnJG6GSm6P/iEYMt1yz9J5p7OpIbthaxh8Fu5sBAqWXPUuf3ZSg==",
+  "dgSpecHash": "a6WBGVOQvo+LvCc7DwDBOgJj/IlyQCMRyE6x32f5xqQV6aYLgpN3DdrxgiahHYK0zJneSw739xFdwY62+77aOg==",
   "success": true,
   "projectFilePath": "C:\\Projeto\\B3\\Back-Entertainment\\Back-Entertainment.csproj",
   "expectedPackageFiles": [
@@ -25,7 +25,7 @@
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.2.0\\microsoft.extensions.dependencyinjection.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\2.2.0\\microsoft.extensions.fileproviders.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.extensions.hosting.abstractions\\2.2.0\\microsoft.extensions.hosting.abstractions.2.2.0.nupkg.sha512",
-    "C:\\Users\\diego\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\2.2.0\\microsoft.extensions.logging.abstractions.2.2.0.nupkg.sha512",
+    "C:\\Users\\diego\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.0\\microsoft.extensions.logging.abstractions.3.1.0.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.extensions.objectpool\\2.2.0\\microsoft.extensions.objectpool.2.2.0.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.extensions.options\\2.2.0\\microsoft.extensions.options.2.2.0.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.extensions.primitives\\2.2.0\\microsoft.extensions.primitives.2.2.0.nupkg.sha512",
@@ -42,6 +42,8 @@
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\mysqlconnector\\0.63.2\\mysqlconnector.0.63.2.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\newtonsoft.json\\10.0.1\\newtonsoft.json.10.0.1.nupkg.sha512",
+    "C:\\Users\\diego\\.nuget\\packages\\restclient.net\\3.2.0\\restclient.net.3.2.0.nupkg.sha512",
+    "C:\\Users\\diego\\.nuget\\packages\\restclient.net.abstractions\\3.2.0\\restclient.net.abstractions.3.2.0.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\swashbuckle.aspnetcore\\5.3.1\\swashbuckle.aspnetcore.5.3.1.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.3.1\\swashbuckle.aspnetcore.swagger.5.3.1.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.3.1\\swashbuckle.aspnetcore.swaggergen.5.3.1.nupkg.sha512",

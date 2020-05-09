@@ -22,6 +22,24 @@ namespace Back_Entertainment.Repository
             }
 			
         }
+        public void UpdateWalletEnd(string CodeWallet)
+        {
+            using(MySqlConnection connection = new MySqlConnection(_connectionString))
+            {
+                connection.Execute(@"UPDATE WALLET SET STATUSWALLET = 3 WHERE CODEWALLET = @CODEWALLET AND STATUSWALLET = 2", new{CodeWallet = CodeWallet});
+            }
+			
+        }
+
+        public void DeleteWalletCurrent(string CodeWallet)
+        {
+            using(MySqlConnection connection = new MySqlConnection(_connectionString))
+            {
+                connection.Execute(@"DELETE FROM WALLETCURRENT WHERE CODEWALLET = @CODEWALLET ", new{CodeWallet = CodeWallet});
+            }
+			
+        }
+        
         public void CreateWalletCurrent(String CodeWallet)
         {
             using(MySqlConnection connection = new MySqlConnection(_connectionString))

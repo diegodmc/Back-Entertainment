@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Back_Entertainment.Controllers
 {
@@ -18,14 +19,16 @@ namespace Back_Entertainment.Controllers
 
         private readonly IWalletCurrentRepository _walletCurrentRepository;
 
+        public IConfiguration Configuration { get; }
         private readonly IWalletRepository _walletRepository;
         private static readonly HttpClient client = new HttpClient();
-        public ActionController(IActionB3Repository actionb3Repository,IPriceActionRepository priceactionRepository,IWalletCurrentRepository walletCurrentRepository,IWalletRepository walletRepository)
+        public ActionController(IActionB3Repository actionb3Repository,IPriceActionRepository priceactionRepository,IWalletCurrentRepository walletCurrentRepository,IWalletRepository walletRepository,IConfiguration configuration)
         {
             _actionb3Repository = actionb3Repository;
             _priceactionRepository = priceactionRepository;
             _walletCurrentRepository = walletCurrentRepository;
             _walletRepository = walletRepository;
+            Configuration = configuration;
         }
 /*
         [HttpGet]
@@ -72,11 +75,15 @@ namespace Back_Entertainment.Controllers
         [Authorize]
         public async Task<ActionResult> UpdatePriceB3()
         {
+             
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
-
-            await UpdatePriceBDB3();
-
-            return Ok();   
+            
+           // if(CanCall())
+            {
+                await UpdatePriceBDB3();
+                return Ok();   
+            }
+            return BadRequest();   
         }
 
         public async Task UpdatePriceBDB3()
@@ -118,16 +125,22 @@ namespace Back_Entertainment.Controllers
                 }
             }
         }
+
+
         [HttpGet]
         [Route("StartEntertainment")]
         [Authorize]
         public async Task<ActionResult> StartEntertainment(string code)
         {
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
-            _walletCurrentRepository.CreateWalletCurrent(code);
-            _walletCurrentRepository.UpdateWalletStart(code);
-             UpdateWalletClient(code,"1");
-            return Ok();   
+            if(CanCall())
+            {
+                _walletCurrentRepository.CreateWalletCurrent(code);
+                _walletCurrentRepository.UpdateWalletStart(code);
+                UpdateWalletClient(code,"1");
+                return Ok();   
+            }
+            return BadRequest();   
         }
         [HttpGet]
         [Route("StartUpdateWalletClient")]
@@ -135,9 +148,13 @@ namespace Back_Entertainment.Controllers
         public async Task<ActionResult> StartUpdateWalletClient(string code)
         {
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
-            code="1";
-            UpdateWalletClient(code,"2");
-            return Ok();   
+            //if(CanCall())
+            {
+                code="1";
+                UpdateWalletClient(code,"2");
+                return Ok();   
+            }
+            return BadRequest();   
         }
         
         public void UpdateWalletClient(string code, string status)
@@ -169,24 +186,43 @@ namespace Back_Entertainment.Controllers
 
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
             
-            var list = _walletCurrentRepository.GetAllWalletsCurrent(codeWallet);
-            
-            foreach(var item in list)
+            if(CanCall())
             {
+                var list = _walletCurrentRepository.GetAllWalletsCurrent(codeWallet);
+                
+                foreach(var item in list)
+                {
 
-                item.FirstPrcActionCurrent = _priceactionRepository.GetPriceAction(item.FirstAction).Price;
-                item.SecondPrcActionCurrent = _priceactionRepository.GetPriceAction(item.SecondAction).Price;
-                item.ThirdPrcActionCurrent = _priceactionRepository.GetPriceAction(item.ThirdAction).Price;
-                item.FourthPrcActionCurrent = _priceactionRepository.GetPriceAction(item.FourthAction).Price;
-                item.FifthPrcActionCurrent = _priceactionRepository.GetPriceAction(item.FifthAction).Price;
+                    item.FirstPrcActionCurrent = _priceactionRepository.GetPriceAction(item.FirstAction).Price;
+                    item.SecondPrcActionCurrent = _priceactionRepository.GetPriceAction(item.SecondAction).Price;
+                    item.ThirdPrcActionCurrent = _priceactionRepository.GetPriceAction(item.ThirdAction).Price;
+                    item.FourthPrcActionCurrent = _priceactionRepository.GetPriceAction(item.FourthAction).Price;
+                    item.FifthPrcActionCurrent = _priceactionRepository.GetPriceAction(item.FifthAction).Price;
 
-                _walletCurrentRepository.UpdateWalletCurrent(item);
+                    _walletCurrentRepository.UpdateWalletCurrent(item);
+                }
+                return Ok();   
             }
-            return Ok();   
+            return BadRequest();   
         }
         
-
-
+        [HttpGet]
+        [Route("EndEntertainment")]
+        [Authorize]
+        public async Task<ActionResult> EndEntertainment(string code)
+        {
+            if(User.Identity.Name == null) return BadRequest("Usuário inválido");
+            if(CanCall())
+            {
+                _walletCurrentRepository.CreateWalletCurrent(code);
+                _walletCurrentRepository.UpdateWalletStart(code);
+                UpdateWalletClient(code,"1");
+                return Ok();   
+            }
+             return BadRequest();   
+        }
+        
+     
         
         [HttpGet]
         [Route("GetActions")]
@@ -195,15 +231,24 @@ namespace Back_Entertainment.Controllers
         {   
             if(User.Identity.Name == null) return BadRequest("Usuário inválido");
             var result = new List<ActionJson>();
-            var actions = _actionb3Repository.GetAllActions();
-            foreach(var item in actions)
+            if(CanCall())
             {
-                var obj = new ActionJson();
-                obj.Cd = item.Code.Replace(".SA","");
-                result.Add(obj);
+                    var actions = _actionb3Repository.GetAllActions();
+                    foreach(var item in actions)
+                    {
+                        var obj = new ActionJson();
+                        obj.Cd = item.Code.Replace(".SA","");
+                        result.Add(obj);
+                    }
             }
-
             return result;
+        }
+        private bool CanCall()
+        {
+            if(Configuration.GetConnectionString("User").Equals(User.Identity.Name))          
+               return true;
+            return false;
+            
         }
     }
 
